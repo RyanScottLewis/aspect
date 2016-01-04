@@ -262,4 +262,42 @@ describe Aspect::HasAttributes do
       expect(instance.age).to eq(123)
     end
   end
+
+  describe "when included from the method" do
+    context "and the :method option is passed" do
+      context "and the values are not nil" do
+        let(:instance) do
+          class_instance = Class.new do
+            include Aspect::HasAttributes(method: { define: :atr, update: :mass_assign })
+          end
+
+          class_instance.new
+        end
+
+        it "should update the attributes on the instance" do
+          expect(instance.class).to respond_to("atr")
+          expect(instance.class).not_to respond_to("attribute")
+          expect(instance).to respond_to("mass_assign")
+          expect(instance).not_to respond_to("update_attributes")
+        end
+      end
+
+      context "and the values are nil" do
+        let(:instance) do
+          class_instance = Class.new do
+            include Aspect::HasAttributes(method: { define: nil, update: nil })
+          end
+
+          class_instance.new
+        end
+
+        it "should update the attributes on the instance" do
+          expect(instance.class).not_to respond_to("atr")
+          expect(instance.class).not_to respond_to("attribute")
+          expect(instance).not_to respond_to("mass_assign")
+          expect(instance).not_to respond_to("update_attributes")
+        end
+      end
+    end
+  end
 end

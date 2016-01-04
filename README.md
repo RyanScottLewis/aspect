@@ -66,6 +66,41 @@ p user.moderator? # => true
 p user.admin? # => true
 ```
 
+You can change the method names if you're including into an object which already
+defines `.attribute` and `#update_attributes`:
+
+```rb
+require "aspect/has_attributes"
+
+class User
+  include Aspect::HasAttributes(method: { define: :atr, update: :mass_assign })
+
+  atr(:name) { |value| value.to_s.strip }
+  atr(:moderator, query: true)
+  atr(:admin, query: true) { |value| @moderator && value }
+
+  def initialize(attributes={})
+    mass_assign(attributes)
+  end
+end
+```
+
+You may omit either method from being defined by passing `false` to it's `:method` option:
+
+```rb
+require "aspect/has_attributes"
+
+class User
+  include Aspect::HasAttributes(method: { define: false })
+
+  def initialize(attributes={})
+    update_attributes(attributes)
+  end
+end
+
+p User.respond_to?(:attribute) # => false
+```
+
 ## Copyright
 
 Copyright © 2016 Ryan Scott Lewis <ryan@rynet.us>.
