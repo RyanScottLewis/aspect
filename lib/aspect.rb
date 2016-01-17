@@ -1,8 +1,6 @@
-require "version"
-
 # A small collection of useful mixins for plain old Ruby objects.
 module Aspect
-  is_versioned
+  VERSION = "0.0.1"
 end
 
 require "aspect/has_attributes"
