@@ -30,6 +30,12 @@ require "aspect"         # Would all files
 
 ## Usage
 
+### General
+
+No `Aspect` module will never define the `#initialize` or `.new` methods to avoid any strange errors
+when implementing your own functionality. At most, a module may *suggest* you call some kind of method
+within `#initialize` or `.new`.
+
 ### Aspect::HasAttributes
 
 **[Documentation](http://www.rubydoc.info/gems/aspect/Aspect/HasAttributes)**

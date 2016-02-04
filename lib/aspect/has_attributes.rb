@@ -10,7 +10,7 @@ module Aspect
   #
   # Here's how I do it with [YARD](http://yardoc.org):
   #
-  # ```
+  # ```rb
   # class User
   #   include Aspect::HasAttributes
   #
@@ -42,7 +42,6 @@ module Aspect
   module HasAttributes
     # The class methods to extend into the object HasAttributes was included in.
     module ClassMethods
-      # @method attribute
       # Define an attribute on the object.
       #
       # @example Simple accessor
@@ -193,7 +192,7 @@ module Aspect
     end
 
     class << self
-      # On include hook.
+      # On include hook to extend `ClassMethods`.
       def included(base)
         base.send(:extend, ClassMethods)
       end
@@ -243,9 +242,7 @@ module Aspect
     # @param [Hash, #to_h] attributes
     # @return [Object] This object.
     def update_attributes(attributes={})
-      attributes = attributes.to_h unless attributes.is_a?(Hash)
-
-      attributes.each { |name, value| send("#{name}=", value) }
+      attributes.to_h.each { |name, value| send("#{name}=", value) }
     end
   end
 end
