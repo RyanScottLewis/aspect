@@ -1,3 +1,4 @@
+require "simplecov"
 require "aspect"
 
 RSpec.configure do |config|
