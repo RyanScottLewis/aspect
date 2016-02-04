@@ -138,41 +138,53 @@ module Aspect
       #   user.admin = true
       #   user.moderator? # => true
       #   user.admin? # => true
+      # @param [#to_sym] name The name of the attribute and instance variable.
       # @param [Hash, #to_hash] options The options for defining and passing to the block.
       # @option options [Boolean] :getter (true) Determines whether to define an attribute getter.
       # @option options [Boolean] :setter (true) Determines whether to define an attribute setter.
       # @option options [Boolean] :query (false)
       #   Determines whether to define as a query attribute, with the getter having a question mark appended to the
       #   method name and the setter converting the value or block into a boolean using bang-bang (`!!`).
+      # @option options [#to_sym] :method (nil) The method name to send to the value after executing
       # @yieldparam [Object] value The value given to the setter method.
       # @yieldparam [Hash] options The options given when defining, given to the setter method.
       # @yieldreturn [Object] The value to set the instance variable as.
       # @return [Object]
-      def attribute(name, options={}, &block)
+      def attribute(name, options={}, &block) # TODO: Should break out into protected methods?
+        name = name.to_sym
+
         options = options.to_h unless options.is_a?(Hash)
-        options = { getter: true, setter: true, query: false }.merge(options)
+        options = { getter: true, setter: true }.merge(options)
 
         if options[:getter]
-          if options[:query]
-            define_method("#{name}?") { !!instance_variable_get("@#{name}") }
-          else
-            attr_reader(name)
+          options[:getter] = options[:getter] == true ? {} : options[:getter].to_h
+
+          options[:getter][:method]          = options[:getter][:method].to_sym          if options[:getter][:method]
+          options[:getter][:instance_method] = options[:getter][:instance_method].to_sym if options[:getter][:instance_method]
+
+          method_name = options[:query] ? "#{name}?" : name
+          define_method(method_name) do
+            value = instance_variable_get("@#{name}")
+            value = value.send(options[:getter][:method]) if options[:getter][:method]
+            value = method(options[:getter][:instance_method]).call(value) if options[:getter][:instance_method]
+
+            options[:query] ? !!value : value
           end
         end
 
         if options[:setter]
-          if options[:query]
-            define_method("#{name}=") do |value|
-              value = instance_exec(value, options, &block) unless block.nil?
+          options[:setter] = options[:setter] == true ? {} : options[:setter].to_h
 
-              instance_variable_set("@#{name}", !!value)
-            end
-          else
-            define_method("#{name}=") do |value|
-              value = instance_exec(value, options, &block) unless block.nil?
+          options[:setter][:method]          = options[:setter][:method].to_sym          if options[:setter][:method]
+          options[:setter][:instance_method] = options[:setter][:instance_method].to_sym if options[:setter][:instance_method]
 
-              instance_variable_set("@#{name}", value)
-            end
+          define_method("#{name}=") do |value|
+            value = instance_exec(value, options, &block) unless block.nil?
+            value = value.send(options[:setter][:method]) if options[:setter][:method]
+            value = method(options[:setter][:instance_method]).call(value) if options[:setter][:instance_method]
+            value = options[:query] ? !!value : value
+
+            instance_variable_set("@#{name}", value)
           end
         end
 
