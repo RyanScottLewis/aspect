@@ -22,7 +22,7 @@ RSpec::Core::RakeTask.new(:spec)
 
 desc "Mutation testing"
 task :mutant do
-  exec("bundle exec mutant --include lib --require aspect --use rspec Aspect*")
+  exec("bundle exec mutant --include lib --require aspect --use rspec Aspect* | tee spec/mutants.diff")
 end
 
 # Reek
@@ -57,34 +57,10 @@ Yardstick::Rake::Measurement.new(:yardstick, options) do |measurement|
   measurement.output = PROJECT_ROOT.join("doc", "coverage.txt")
 end
 
-# Graphs
+# Version
 
-namespace :graph do
-  desc "Generate YARD dot file"
-  task :yard do
-    path = PROJECT_ROOT.join("doc", "graphs", "yard.dot").relative_path_from(PROJECT_ROOT)
+require "rake/version_task"
 
-    sh("bundle exec yard graph --full --file #{path}")
-  end
-
-  desc "Generate png files from dot files"
-  task :png do
-    renders_path = PROJECT_ROOT.join("doc", "graphs", "renders")
-    renders_path.mkpath
-
-    glob_query = PROJECT_ROOT.join("doc", "graphs", "*.dot")
-
-    Pathname.glob(glob_query).each do |input_path|
-      output_filename = "#{input_path.basename(".dot")}.png"
-      output_path = renders_path.join(output_filename)
-
-      sh("dot -T png \"#{input_path}\" -o \"#{output_path}\"")
-    end
-  end
-end
-
-desc "Generate all graphs"
-task :graph do
-  Rake::Task["graph:yard"].execute
-  Rake::Task["graph:png"].execute
+Rake::VersionTask.new do |task|
+  task.with_git_tag = true
 end
