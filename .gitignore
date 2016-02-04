@@ -9,3 +9,4 @@ pkg/
 doc/
 tmp/
 spec/coverage
+spec/mutants.txt

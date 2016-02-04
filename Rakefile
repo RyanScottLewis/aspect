@@ -22,7 +22,7 @@ RSpec::Core::RakeTask.new(:spec)
 
 desc "Mutation testing"
 task :mutant do
-  exec("bundle exec mutant --include lib --require aspect --use rspec Aspect* | tee spec/mutants.diff")
+  exec("bundle exec mutant --include lib --require aspect --use rspec Aspect* | tee spec/mutants.txt")
 end
 
 # Reek
