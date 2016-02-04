@@ -1,4 +1,11 @@
+.DS_Store
+*.db
+*.log
+*.yardoc
+
+Gemfile.lock
+
 pkg/
 doc/
-.yardoc/
-Gemfile.lock
+tmp/
+spec/coverage

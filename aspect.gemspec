@@ -5,9 +5,6 @@ Gem::Specification.new do |spec|
   spec.summary = "A small collection of useful classes, modules, and mixins for plain old Ruby objects."
   spec.license = "MIT"
 
-  # Dependencies
-  spec.add_dependency "version", "~> 1.0.0"
-
   # Pragmatically set variables and constants
   spec.author        = "Ryan Scott Lewis"
   spec.email         = "ryan@rynet.us"
