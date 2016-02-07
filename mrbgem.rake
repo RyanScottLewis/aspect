@@ -8,6 +8,7 @@ MRuby::Gem::Specification.new("aspect") do |spec|
   spec.version = Pathname.glob("VERSION*").first.read rescue "0.0.0"
 
   spec.rbfiles = []
+
   spec.rbfiles << "#{dir}/lib/aspect.rb"
   spec.rbfiles << "#{dir}/lib/aspect/has_attributes.rb"
 end

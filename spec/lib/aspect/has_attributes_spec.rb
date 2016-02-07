@@ -57,58 +57,6 @@ describe Aspect::HasAttributes do
         it "should define the getter" do
           expect(instance.name).to eq("foobar")
         end
-
-        context "and it's a Hash" do
-          context "and the :method option is passed" do
-            let(:instance) do
-              instance_class = Class.new(TestObject) do
-                attribute(:name, getter: { method: :capitalize })
-              end
-
-              instance_class.new
-            end
-
-            it "define the getter which calls the given method on the instance variable" do
-              expect(instance.name).to eq("Foobar")
-            end
-          end
-
-          context "and the :instance_method option is passed" do
-            let(:instance) do
-              instance_class = Class.new(TestObject) do
-                attribute(:name, getter: { instance_method: :reversitalize })
-
-                def reversitalize(value)
-                  value.reverse.capitalize
-                end
-              end
-
-              instance_class.new
-            end
-
-            it "define the getter which calls the given instance method, passing the instance variable as the argument" do
-              expect(instance.name).to eq("Raboof")
-            end
-          end
-
-          context "and both the :method and :instance_method options are passed" do
-            let(:instance) do
-              instance_class = Class.new(TestObject) do
-                attribute(:name, getter: { method: :capitalize, instance_method: :exclamationize })
-
-                def exclamationize(value)
-                  "#{value}!"
-                end
-              end
-
-              instance_class.new
-            end
-
-            it "define the getter which calls the given instance method, passing the result of the method called on the instance variable as the argument" do
-              expect(instance.name).to eq("Foobar!")
-            end
-          end
-        end
       end
 
       context "and it's falsey" do
@@ -142,64 +90,6 @@ describe Aspect::HasAttributes do
             instance.name = "foobar"
             expect(instance.name).to eq("foobar")
           end
-
-          context "and it's a Hash" do
-            context "and the :method option is passed" do
-              let(:instance) do
-                instance_class = Class.new(TestObject) do
-                  attribute(:name, setter: { method: :capitalize })
-                end
-
-                instance_class.new
-              end
-
-              it "should define the setter which calls the given method on the instance variable" do
-                expect(instance.name).to eq("foobar")
-                instance.name = "foobar"
-                expect(instance.name).to eq("Foobar")
-              end
-            end
-
-            context "and the :instance_method option is passed" do
-              let(:instance) do
-                instance_class = Class.new(TestObject) do
-                  attribute(:name, setter: { instance_method: :reversitalize })
-
-                  def reversitalize(value)
-                    value.reverse.capitalize
-                  end
-                end
-
-                instance_class.new
-              end
-
-              it "should define the setter which calls the given instance method, passing the instance variable as the argument" do
-                expect(instance.name).to eq("foobar")
-                instance.name = "foobar"
-                expect(instance.name).to eq("Raboof")
-              end
-            end
-
-            context "and both the :method and :instance_method options are passed" do
-              let(:instance) do
-                instance_class = Class.new(TestObject) do
-                  attribute(:name, setter: { method: :capitalize, instance_method: :exclamationize })
-
-                  def exclamationize(value)
-                    "#{value}!"
-                  end
-                end
-
-                instance_class.new
-              end
-
-              it "define the setter which calls the given instance method, passing the result of the method called on the instance variable as the argument" do
-                expect(instance.name).to eq("foobar")
-                instance.name = "foobar"
-                expect(instance.name).to eq("Foobar!")
-              end
-            end
-          end
         end
 
         context "and it's falsey" do
@@ -232,64 +122,6 @@ describe Aspect::HasAttributes do
             expect(instance.name).to eq("foobar")
             instance.name = "foobar"
             expect(instance.name).to eq("raboof")
-          end
-
-          context "and it's a Hash" do
-            context "and the :method option is passed" do
-              let(:instance) do
-                instance_class = Class.new(TestObject) do
-                  attribute(:name, setter: { method: :capitalize })
-                end
-
-                instance_class.new
-              end
-
-              it "should define the setter which calls the given method on the instance variable" do
-                expect(instance.name).to eq("foobar")
-                instance.name = "foobar"
-                expect(instance.name).to eq("Foobar")
-              end
-            end
-
-            context "and the :instance_method option is passed" do
-              let(:instance) do
-                instance_class = Class.new(TestObject) do
-                  attribute(:name, setter: { instance_method: :reversitalize })
-
-                  def reversitalize(value)
-                    value.reverse.capitalize
-                  end
-                end
-
-                instance_class.new
-              end
-
-              it "should define the setter which calls the given instance method, passing the instance variable as the argument" do
-                expect(instance.name).to eq("foobar")
-                instance.name = "foobar"
-                expect(instance.name).to eq("Raboof")
-              end
-            end
-
-            context "and both the :method and :instance_method options are passed" do
-              let(:instance) do
-                instance_class = Class.new(TestObject) do
-                  attribute(:name, setter: { method: :capitalize, instance_method: :exclamationize })
-
-                  def exclamationize(value)
-                    "#{value}!"
-                  end
-                end
-
-                instance_class.new
-              end
-
-              it "define the setter which calls the given instance method, passing the result of the method called on the instance variable as the argument" do
-                expect(instance.name).to eq("foobar")
-                instance.name = "foobar"
-                expect(instance.name).to eq("Foobar!")
-              end
-            end
           end
         end
 
